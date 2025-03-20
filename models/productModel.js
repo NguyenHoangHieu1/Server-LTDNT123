@@ -2,47 +2,30 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    sku: {
-      type: String,
-      default: "",
-    },
-    inventory: {
-      type: Number,
-      default: 0,
-    },
-    features: {
-      type: [String],
-      default: [],
-    },
-    images: {
-      type: [String],
-      default: [],
-    },
-    user: {
+    idsanpham: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      default: () => new mongoose.Types.ObjectId(),
+      index: true,
+    },
+    tensanpham: {
+      type: String,
       required: true,
     },
-  },
-  {
-    timestamps: true,
-  },
+    gia: {
+      type: Number,
+      required: true,
+    },
+    loaisp: {
+      type: String,
+      required: true,
+    },
+    hinhanh: {
+      type: String,
+    },
+  }
+  // {
+  //   _id: false,
+  // }
 );
 
 const Product = mongoose.model("Product", productSchema);

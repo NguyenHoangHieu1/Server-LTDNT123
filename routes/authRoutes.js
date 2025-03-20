@@ -12,18 +12,41 @@ const generateToken = (id) => {
   });
 };
 
+// @desc    delete the user
+// @route   POST /api/auth/:id
+// @access  Public
+router.delete(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    // Check if user exists
+    const userExists = await User.findById(id);
+
+    if (!userExists) {
+      res.status(400);
+      throw new Error("User doesn't exist");
+    }
+
+    await User.deleteOne({ _id: id });
+
+    res.status(204).json({
+      message: "Delete successfully",
+    });
+  })
+);
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
 router.post(
   "/register",
   asyncHandler(async (req, res) => {
-    console.log("hello world");
     const { fullName, email, password } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
-
+    console.log("userExist:", userExists);
     if (userExists) {
       res.status(400);
       throw new Error("User already exists");
@@ -60,7 +83,8 @@ router.post(
 
     // Check for user email
     const user = await User.findOne({ email });
-
+    console.log("user:", user.toJSON());
+    console.log("matchPassword:", await user.matchPassword(password));
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
