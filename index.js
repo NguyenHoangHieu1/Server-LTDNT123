@@ -13,6 +13,13 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes.js");
+const cpuRoutes = require("./routes/cpuRoutes");
+const motherboardRoutes = require("./routes/motherboardRoutes");
+const gpuRoutes = require("./routes/gpuRoutes");
+const driveRoutes = require("./routes/driveRoutes");
+const memoryRoutes = require("./routes/memoryRoutes.js")
+const keyboardRoutes = require("./routes/keyboardRoutes.js")
+const mouseRoutes = require("./routes/mouseRoutes.js")
 
 // Initialize express
 const app = express();
@@ -34,6 +41,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
+app.use("/api/cpu",cpuRoutes)
+app.use("/api/gpu",gpuRoutes)
+app.use("/api/drive",driveRoutes)
+app.use("/api/memory",memoryRoutes)
+app.use("/api/keyboard",keyboardRoutes)
+app.use("/api/motherboard",motherboardRoutes)
+app.use("/api/mouse",mouseRoutes)
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);

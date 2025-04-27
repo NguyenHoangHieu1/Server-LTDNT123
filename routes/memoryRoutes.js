@@ -1,0 +1,132 @@
+const express = require("express");
+const router = express.Router();
+const asyncHandler = require("express-async-handler");
+const Memory = require("../models/memory"); // hoặc đường dẫn đến file model của bạn
+const { protect } = require("../middleware/authMiddleware");
+
+// @desc    Create a new Memory module
+// @route   POST /api/memories
+// @access  Private
+router.post(
+  "/",
+  protect,
+  asyncHandler(async (req, res) => {
+    const {
+      name,
+      price,
+      speed,
+      modules,
+      price_per_gb,
+      color,
+      first_word_latency,
+      cas_latency,
+    } = req.body;
+
+    const memory = await Memory.create({
+      name,
+      price,
+      speed,
+      modules,
+      price_per_gb,
+      color,
+      first_word_latency,
+      cas_latency,
+    });
+
+    if (memory) {
+      res.status(201).json(memory);
+    } else {
+      res.status(400);
+      throw new Error("Invalid memory data");
+    }
+  })
+);
+
+// @desc    Get all Memory modules
+// @route   GET /api/memories
+// @access  Private
+router.get(
+  "/",
+  protect,
+  asyncHandler(async (req, res) => {
+    const memories = await Memory.find().sort({ createdAt: -1 });
+    res.json(memories);
+  })
+);
+
+// @desc    Get Memory by ID
+// @route   GET /api/memories/:id
+// @access  Private
+router.get(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    const memory = await Memory.findById(req.params.id);
+    if (memory) {
+      res.json(memory);
+    } else {
+      res.status(404);
+      throw new Error("Memory not found");
+    }
+  })
+);
+
+// @desc    Update a Memory module
+// @route   PUT /api/memories/:id
+// @access  Private
+router.put(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    const {
+      name,
+      price,
+      speed,
+      modules,
+      price_per_gb,
+      color,
+      first_word_latency,
+      cas_latency,
+    } = req.body;
+
+    const memory = await Memory.findById(req.params.id);
+
+    if (memory) {
+      memory.name = name ?? memory.name;
+      memory.price = price ?? memory.price;
+      memory.speed = speed ?? memory.speed;
+      memory.modules = modules ?? memory.modules;
+      memory.price_per_gb = price_per_gb ?? memory.price_per_gb;
+      memory.color = color ?? memory.color;
+      memory.first_word_latency = first_word_latency ?? memory.first_word_latency;
+      memory.cas_latency = cas_latency ?? memory.cas_latency;
+
+      const updatedMemory = await memory.save();
+      res.json(updatedMemory);
+    } else {
+      res.status(404);
+      throw new Error("Memory not found");
+    }
+  })
+);
+
+// @desc    Delete a Memory module
+// @route   DELETE /api/memories/:id
+// @access  Private
+router.delete(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    const memory = await Memory.findById(req.params.id);
+
+    if (memory) {
+      await memory.deleteOne();
+      res.json({ message: "Memory removed" });
+    } else {
+      res.status(404);
+      throw new Error("Memory not found");
+    }
+  })
+);
+
+module.exports = router;
