@@ -52,6 +52,33 @@ router.get(
   })
 );
 
+// @desc    Get Mice with pagination
+// @route   GET /api/mice/paginated?page=1&limit=10
+// @access  Private
+router.get(
+  "/paginated",
+  protect,
+  asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await Mouse.countDocuments();
+    const items = await Mouse.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      items,
+    });
+  })
+);
+
 // @desc    Get Mouse by ID
 // @route   GET /api/mice/:id
 // @access  Private

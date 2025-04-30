@@ -54,6 +54,33 @@ router.get(
   })
 );
 
+// @desc    Get Memory modules with pagination
+// @route   GET /api/memories/paginated?page=1&limit=10
+// @access  Private
+router.get(
+  "/paginated",
+  protect,
+  asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await Memory.countDocuments();
+    const items = await Memory.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      items,
+    });
+  })
+);
+
 // @desc    Get Memory by ID
 // @route   GET /api/memories/:id
 // @access  Private
@@ -98,7 +125,8 @@ router.put(
       memory.modules = modules ?? memory.modules;
       memory.price_per_gb = price_per_gb ?? memory.price_per_gb;
       memory.color = color ?? memory.color;
-      memory.first_word_latency = first_word_latency ?? memory.first_word_latency;
+      memory.first_word_latency =
+        first_word_latency ?? memory.first_word_latency;
       memory.cas_latency = cas_latency ?? memory.cas_latency;
 
       const updatedMemory = await memory.save();

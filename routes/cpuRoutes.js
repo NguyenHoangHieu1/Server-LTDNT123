@@ -12,7 +12,16 @@ router.post(
   "/",
   protect,
   asyncHandler(async (req, res) => {
-    const { name, price, core_count, core_clock, boost_clock, tdp, graphics, smt } = req.body;
+    const {
+      name,
+      price,
+      core_count,
+      core_clock,
+      boost_clock,
+      tdp,
+      graphics,
+      smt,
+    } = req.body;
 
     const cpu = await CPU.create({
       name,
@@ -45,6 +54,32 @@ router.get(
     res.json(cpus);
   })
 );
+// @desc    Get CPUs with pagination
+// @route   GET /api/cpus/paginated?page=1&limit=10
+// @access  Private
+router.get(
+  "/paginated",
+  protect,
+  asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await CPU.countDocuments();
+    const items = await CPU.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      items,
+    });
+  })
+);
 
 // @desc    Get CPU by ID
 // @route   GET /api/cpus/:id
@@ -70,7 +105,16 @@ router.put(
   "/:id",
   protect,
   asyncHandler(async (req, res) => {
-    const { name, price, core_count, core_clock, boost_clock, tdp, graphics, smt } = req.body;
+    const {
+      name,
+      price,
+      core_count,
+      core_clock,
+      boost_clock,
+      tdp,
+      graphics,
+      smt,
+    } = req.body;
 
     const cpu = await CPU.findById(req.params.id); // Sử dụng findById thay vì tìm theo id
 

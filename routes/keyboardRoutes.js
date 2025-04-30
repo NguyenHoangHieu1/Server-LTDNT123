@@ -54,6 +54,33 @@ router.get(
   })
 );
 
+// @desc    Get Keyboards with pagination
+// @route   GET /api/keyboards/paginated?page=1&limit=10
+// @access  Private
+router.get(
+  "/paginated",
+  protect,
+  asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await Keyboard.countDocuments();
+    const items = await Keyboard.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      items,
+    });
+  })
+);
+
 // @desc    Get Keyboard by ID
 // @route   GET /api/keyboards/:id
 // @access  Private
