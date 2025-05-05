@@ -20,7 +20,7 @@ const cpuSchema = new mongoose.Schema(
       required: true,
     },
     core_count: {
-      type: Number,
+      type: Number, 
       required: true,
     },
     core_clock: {

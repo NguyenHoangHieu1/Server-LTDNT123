@@ -3,7 +3,8 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const Memory = require("../models/memory"); // hoặc đường dẫn đến file model của bạn
 const { protect } = require("../middleware/authMiddleware");
-
+const { transformItems, transformItem } = require("../utils/transformItems");
+const TYPE = "memory";
 // @desc    Create a new Memory module
 // @route   POST /api/memories
 // @access  Private
@@ -50,7 +51,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const memories = await Memory.find().sort({ createdAt: -1 });
-    res.json(memories);
+    res.json(transformItems(TYPE, memories));
   })
 );
 
@@ -76,7 +77,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems(TYPE, items),
     });
   })
 );
@@ -90,7 +91,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const memory = await Memory.findById(req.params.id);
     if (memory) {
-      res.json(memory);
+      res.json(transformItem(TYPE, memory));
     } else {
       res.status(404);
       throw new Error("Memory not found");

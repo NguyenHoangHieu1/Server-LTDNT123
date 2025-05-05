@@ -3,6 +3,7 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const Drive = require("../models/drive"); // hoặc đường dẫn đến file model của bạn
 const { protect } = require("../middleware/authMiddleware");
+const { transformItems, transformItem } = require("../utils/transformItems");
 
 // @desc    Create a new Drive
 // @route   POST /api/drives
@@ -50,7 +51,8 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const drives = await Drive.find().sort({ createdAt: -1 });
-    res.json(drives);
+
+    res.json(transformItems("drive", drives));
   })
 );
 
@@ -76,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems("drive", items),
     });
   })
 );
@@ -90,7 +92,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const drive = await Drive.findById(req.params.id);
     if (drive) {
-      res.json(drive);
+      res.json(transformItem("drive", drive));
     } else {
       res.status(404);
       throw new Error("Drive not found");

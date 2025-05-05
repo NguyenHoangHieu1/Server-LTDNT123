@@ -10,7 +10,6 @@ dotenv.config();
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes.js");
 const cpuRoutes = require("./routes/cpuRoutes");
@@ -49,7 +48,6 @@ app.use("/api/keyboard",keyboardRoutes)
 app.use("/api/motherboard",motherboardRoutes)
 app.use("/api/mouse",mouseRoutes)
 app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use('/api/password-reset', passwordResetRoutes);
 app.get('/reset-password/:token', (req, res) => {

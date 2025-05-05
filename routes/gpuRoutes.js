@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const GPU = require("../models/gpu"); // Model GPU
 const { protect } = require("../middleware/authMiddleware");
 const mongoose = require("mongoose");
+const { transformItems, transformItem } = require("../utils/transformItems");
 
 // @desc    Create a new GPU
 // @route   POST /api/gpus
@@ -51,7 +52,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const gpus = await GPU.find().sort({ createdAt: -1 });
-    res.json(gpus);
+    res.json(transformItems("gpu", gpus));
   })
 );
 
@@ -77,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems("gpu", items),
     });
   })
 );
@@ -91,7 +92,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const gpu = await GPU.findOne({ id: req.params.id });
     if (gpu) {
-      res.json(gpu);
+      res.json(transformItem("gpu", gpu));
     } else {
       res.status(404);
       throw new Error("GPU not found");

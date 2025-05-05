@@ -3,6 +3,8 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const Mouse = require("../models/mouse");
 const { protect } = require("../middleware/authMiddleware");
+const { transformItems, transformItem } = require("../utils/transformItems");
+const TYPE = "mouse";
 
 // @desc    Create a new Mouse
 // @route   POST /api/mice
@@ -48,7 +50,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const mice = await Mouse.find().sort({ createdAt: -1 });
-    res.json(mice);
+    res.json(transformItems(TYPE, mice));
   })
 );
 
@@ -74,7 +76,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems(TYPE, items),
     });
   })
 );
@@ -88,7 +90,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const mouse = await Mouse.findById(req.params.id);
     if (mouse) {
-      res.json(mouse);
+      res.json(transformItem(TYPE, mouse));
     } else {
       res.status(404);
       throw new Error("Mouse not found");

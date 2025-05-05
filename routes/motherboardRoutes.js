@@ -3,6 +3,8 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const Motherboard = require("../models/motherboard"); // adjust path as needed
 const { protect } = require("../middleware/authMiddleware");
+const { transformItems, transformItem } = require("../utils/transformItems");
+const TYPE = "motherboard";
 
 // @desc    Create a new Motherboard
 // @route   POST /api/motherboards
@@ -48,7 +50,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const motherboards = await Motherboard.find().sort({ createdAt: -1 });
-    res.json(motherboards);
+    res.json(transformItems(TYPE, motherboards));
   })
 );
 
@@ -74,7 +76,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems(TYPE, items),
     });
   })
 );
@@ -88,7 +90,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const motherboard = await Motherboard.findById(req.params.id);
     if (motherboard) {
-      res.json(motherboard);
+      res.json(transformItem(TYPE, motherboard));
     } else {
       res.status(404);
       throw new Error("Motherboard not found");

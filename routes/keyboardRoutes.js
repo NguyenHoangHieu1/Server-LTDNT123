@@ -3,6 +3,9 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const Keyboard = require("../models/keyboard");
 const { protect } = require("../middleware/authMiddleware");
+const { transformItems, transformItem } = require("../utils/transformItems");
+
+const TYPE = "keyboard";
 
 // @desc    Create a new Keyboard
 // @route   POST /api/keyboards
@@ -50,7 +53,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const keyboards = await Keyboard.find().sort({ createdAt: -1 });
-    res.json(keyboards);
+    res.json(transformItems(TYPE, keyboards));
   })
 );
 
@@ -76,7 +79,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems(TYPE, items),
     });
   })
 );
@@ -90,7 +93,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const keyboard = await Keyboard.findById(req.params.id);
     if (keyboard) {
-      res.json(keyboard);
+      res.json(transformItem(TYPE, keyboard));
     } else {
       res.status(404);
       throw new Error("Keyboard not found");

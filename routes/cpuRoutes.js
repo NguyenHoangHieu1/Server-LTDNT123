@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const CPU = require("../models/cpu"); // Đảm bảo model này đúng với schema mới
 const { protect } = require("../middleware/authMiddleware");
 const mongoose = require("mongoose");
+const { transformItems, transformItem } = require("../utils/transformItems");
 
 // @desc    Create a new CPU
 // @route   POST /api/cpus
@@ -51,7 +52,8 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const cpus = await CPU.find().sort({ createdAt: -1 });
-    res.json(cpus);
+
+    res.json(transformItems("cpu", cpus));
   })
 );
 // @desc    Get CPUs with pagination
@@ -76,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items,
+      items: transformItems("cpu", convertedCpus),
     });
   })
 );
@@ -89,8 +91,9 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const cpu = await CPU.findById(req.params.id); // Sử dụng findById thay vì tìm theo id
+
     if (cpu) {
-      res.json(cpu);
+      res.json(transformItem("cpu", cpu));
     } else {
       res.status(404);
       throw new Error("CPU not found");
