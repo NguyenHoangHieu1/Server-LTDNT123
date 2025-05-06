@@ -14,6 +14,7 @@ router.post(
     const {
       name,
       userId,
+      totalPrice,
       cpuId,
       gpuId,
       driveId,
@@ -27,6 +28,7 @@ router.post(
       name,
       userId,
       cpuId,
+      totalPrice,
       gpuId,
       driveId,
       keyboardId,
@@ -110,6 +112,7 @@ router.put(
     const {
       name,
       userId,
+      totalPrice,
       cpuId,
       gpuId,
       driveId,
@@ -125,6 +128,7 @@ router.put(
       build.name = name || build.name;
       build.userId = userId || build.userId;
       build.cpuId = cpuId || build.cpuId;
+      build.totalPrice = totalPrice || build.totalPrice;
       build.gpuId = gpuId || build.gpuId;
       build.driveId = driveId || build.driveId;
       build.keyboardId = keyboardId || build.keyboardId;

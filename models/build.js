@@ -46,6 +46,14 @@ const buildSchema = new mongoose.Schema(
       ref: "mouse",
       required: true,
     },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    createDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { collection: "builds" }
 );

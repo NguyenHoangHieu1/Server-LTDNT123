@@ -18,4 +18,7 @@ const transformItems = (type, items) => {
   return convertedItems;
 };
 
-export { transformItem, transformItems };
+module.exports = {
+  transformItem,
+  transformItems
+};

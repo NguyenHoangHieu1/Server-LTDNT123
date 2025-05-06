@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Mouse = require("../models/mouse");
 const { protect } = require("../middleware/authMiddleware");
 const { transformItems, transformItem } = require("../utils/transformItems");
-const TYPE = "mouse";
+const TYPE = "Mouse";
 
 // @desc    Create a new Mouse
 // @route   POST /api/mice

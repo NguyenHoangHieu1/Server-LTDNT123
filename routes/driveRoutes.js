@@ -52,7 +52,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const drives = await Drive.find().sort({ createdAt: -1 });
 
-    res.json(transformItems("drive", drives));
+    res.json(transformItems("Storage", drives));
   })
 );
 
@@ -78,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items: transformItems("drive", items),
+      items: transformItems("Storage", items),
     });
   })
 );
@@ -92,7 +92,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const drive = await Drive.findById(req.params.id);
     if (drive) {
-      res.json(transformItem("drive", drive));
+      res.json(transformItem("Storage", drive));
     } else {
       res.status(404);
       throw new Error("Drive not found");
