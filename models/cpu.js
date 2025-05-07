@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 // "name":string"amd ryzen 5 5600x"
 // "price":float168.99
@@ -20,7 +19,7 @@ const cpuSchema = new mongoose.Schema(
       required: true,
     },
     core_count: {
-      type: Number, 
+      type: Number,
       required: true,
     },
     core_clock: {
@@ -43,10 +42,21 @@ const cpuSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    socket: {
+      type: String,
+      required: true,
+    },
+    purpose: {
+      type: String,
+      required: true,
+    },
+    performance_score: {
+      type: Number,
+      required: true,
+    },
   },
-  {collection:"cpu"}
+  { collection: "cpu" }
 );
-
 
 const cpu = mongoose.model("cpu", cpuSchema);
 

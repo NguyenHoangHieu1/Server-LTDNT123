@@ -35,9 +35,16 @@ const keyboardSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    purpose: {
+      type: String,
+      required: true,
+    },
+    performance_score: {
+      type: Number,
+      required: true,
+    },
   },
-  {collection:"keyboard"}
-
+  { collection: "keyboard" }
 );
 
 const Keyboard = mongoose.model("Keyboard", keyboardSchema);
