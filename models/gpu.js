@@ -32,6 +32,7 @@ const gpuSchema = new mongoose.Schema(
       required: false,
     },
     color: {
+      default: "",
       type: String,
       required: false,
     },
