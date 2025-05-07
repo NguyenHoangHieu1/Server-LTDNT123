@@ -78,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items: transformItems("cpu", convertedCpus),
+      items: transformItems("cpu", items),
     });
   })
 );
