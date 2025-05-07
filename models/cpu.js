@@ -39,8 +39,8 @@ const cpuSchema = new mongoose.Schema(
       default: null,
     },
     smt: {
-      type: Boolean,
-      required: true,
+      type: String,
+      required: false,
     },
     socket: {
       type: String,
@@ -53,6 +53,10 @@ const cpuSchema = new mongoose.Schema(
     performance_score: {
       type: Number,
       required: true,
+    },
+    image: {
+      type: String,
+      required: false,
     },
   },
   { collection: "cpu" }

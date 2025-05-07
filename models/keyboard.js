@@ -24,8 +24,8 @@ const keyboardSchema = new mongoose.Schema(
       required: true,
     },
     tenkeyless: {
-      type: Boolean,
-      required: true,
+      type: String,
+      required: false,
     },
     connection_type: {
       type: String,
@@ -42,6 +42,10 @@ const keyboardSchema = new mongoose.Schema(
     performance_score: {
       type: Number,
       required: true,
+    },
+    image: {
+      type: String,
+      required: false,
     },
   },
   { collection: "keyboard" }

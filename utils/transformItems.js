@@ -1,11 +1,12 @@
 const transformItem = (type, item) => {
+  const { id, name, price, ...itemProps } = item.toObject();
   return {
     id: item._id,
     type: type,
     name: item.name,
     price: item.price,
     specs: {
-      ...item.toObject(),
+      ...itemProps,
     },
   };
 };
@@ -20,5 +21,5 @@ const transformItems = (type, items) => {
 
 module.exports = {
   transformItem,
-  transformItems
+  transformItems,
 };

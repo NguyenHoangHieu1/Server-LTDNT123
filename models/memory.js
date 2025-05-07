@@ -14,6 +14,10 @@ const memorySchema = new mongoose.Schema(
     total_capacity: { type: Number, required: true }, // tính bằng GB
     purpose: { type: String, required: true },
     performance_score: { type: Number, required: true },
+    image: {
+      type: String,
+      required: false,
+    },
   },
   { collection: "memory" }
 );
