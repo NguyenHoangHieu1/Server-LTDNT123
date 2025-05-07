@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Memory = require("../models/memory"); // hoặc đường dẫn đến file model của bạn
 const { protect } = require("../middleware/authMiddleware");
 const { transformItems, transformItem } = require("../utils/transformItems");
-const TYPE = "memory";
+const TYPE = "RAM";
 // @desc    Create a new Memory module
 // @route   POST /api/memory
 // @access  Private

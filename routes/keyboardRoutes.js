@@ -5,7 +5,7 @@ const Keyboard = require("../models/keyboard");
 const { protect } = require("../middleware/authMiddleware");
 const { transformItems, transformItem } = require("../utils/transformItems");
 
-const TYPE = "keyboard";
+const TYPE = "Keyboard";
 
 // @desc    Create a new Keyboard
 // @route   POST /api/keyboards

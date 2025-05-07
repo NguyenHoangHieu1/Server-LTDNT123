@@ -53,7 +53,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const cpus = await CPU.find().sort({ createdAt: -1 });
 
-    res.json(transformItems("cpu", cpus));
+    res.json(transformItems("CPU", cpus));
   })
 );
 // @desc    Get CPUs with pagination
@@ -78,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items: transformItems("cpu", convertedCpus),
+      items: transformItems("CPU", items),
     });
   })
 );
@@ -112,7 +112,7 @@ router.get(
     const cpu = await CPU.findById(req.params.id); // Sử dụng findById thay vì tìm theo id
 
     if (cpu) {
-      res.json(transformItem("cpu", cpu));
+      res.json(transformItem("CPU", cpu));
     } else {
       res.status(404);
       throw new Error("CPU not found");

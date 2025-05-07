@@ -52,7 +52,7 @@ router.get(
   protect,
   asyncHandler(async (req, res) => {
     const gpus = await GPU.find().sort({ createdAt: -1 });
-    res.json(transformItems("gpu", gpus));
+    res.json(transformItems("GPU", gpus));
   })
 );
 
@@ -78,7 +78,7 @@ router.get(
       limit,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      items: transformItems("gpu", items),
+      items: transformItems("GPU", items),
     });
   })
 );
@@ -107,9 +107,9 @@ router.get(
   "/:id",
   protect,
   asyncHandler(async (req, res) => {
-    const gpu = await GPU.findOne({ id: req.params.id });
+    const gpu = await GPU.findById(req.params.id);
     if (gpu) {
-      res.json(transformItem("gpu", gpu));
+      res.json(transformItem("GPU", gpu));
     } else {
       res.status(404);
       throw new Error("GPU not found");

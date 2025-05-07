@@ -19,6 +19,7 @@ const driveRoutes = require("./routes/driveRoutes");
 const memoryRoutes = require("./routes/memoryRoutes.js")
 const keyboardRoutes = require("./routes/keyboardRoutes.js")
 const mouseRoutes = require("./routes/mouseRoutes.js")
+const buildRoutes = require("./routes/buildRoutes.js")
 
 // Initialize express
 const app = express();
@@ -40,13 +41,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api/cpu",cpuRoutes)
-app.use("/api/gpu",gpuRoutes)
-app.use("/api/drive",driveRoutes)
-app.use("/api/memory",memoryRoutes)
-app.use("/api/keyboard",keyboardRoutes)
-app.use("/api/motherboard",motherboardRoutes)
-app.use("/api/mouse",mouseRoutes)
+app.use("/api/cpu", cpuRoutes)
+app.use("/api/gpu", gpuRoutes)
+app.use("/api/drive", driveRoutes)
+app.use("/api/memory", memoryRoutes)
+app.use("/api/keyboard", keyboardRoutes)
+app.use("/api/motherboard", motherboardRoutes)
+app.use("/api/mouse", mouseRoutes)
+app.use("/api/build", buildRoutes)
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use('/api/password-reset', passwordResetRoutes);

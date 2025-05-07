@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Motherboard = require("../models/motherboard"); // adjust path as needed
 const { protect } = require("../middleware/authMiddleware");
 const { transformItems, transformItem } = require("../utils/transformItems");
-const TYPE = "motherboard";
+const TYPE = "Motherboard";
 
 // @desc    Create a new Motherboard
 // @route   POST /api/motherboards
