@@ -65,9 +65,13 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
+    const keyword = req.query.name
+      ? {
+          name: { $regex: req.query.name, $options: "i" }, // không phân biệt hoa thường
+        }
+      : {};
     const total = await Memory.countDocuments();
-    const items = await Memory.find()
+    const items = await Memory.find(keyword)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -79,24 +83,6 @@ router.get(
       totalItems: total,
       items: transformItems(TYPE, items),
     });
-  })
-);
-
-// @desc    Get all Memory modules, with optional search
-// @route   GET /api/memory/search?name=abc
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const keyword = req.query.name
-      ? {
-          name: { $regex: req.query.name, $options: "i" }, // không phân biệt hoa thường
-        }
-      : {};
-
-    const memories = await Memory.find(keyword).sort({ createdAt: -1 });
-    res.json(transformItems(TYPE, memories));
   })
 );
 

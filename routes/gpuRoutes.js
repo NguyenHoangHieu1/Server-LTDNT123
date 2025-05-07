@@ -66,9 +66,12 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const nameQuery = req.query.name;
 
     const total = await GPU.countDocuments();
-    const items = await GPU.find()
+    const items = await GPU.find({
+      name: { $regex: nameQuery, $options: "i" }, // tìm không phân biệt hoa thường
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -80,23 +83,6 @@ router.get(
       totalItems: total,
       items: transformItems("GPU", items),
     });
-  })
-);
-
-// @desc    Search GPUs by name
-// @route   GET /api/gpus/search?name=keyword
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const nameQuery = req.query.name;
-
-    const gpus = await GPU.find({
-      name: { $regex: nameQuery, $options: "i" }, // tìm không phân biệt hoa thường
-    }).sort({ createdAt: -1 });
-
-    res.json(transformItems("gpu", gpus));
   })
 );
 

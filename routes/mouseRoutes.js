@@ -64,9 +64,12 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const name = req.query.name || "";
 
     const total = await Mouse.countDocuments();
-    const items = await Mouse.find()
+    const items = await Mouse.find({
+      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -78,23 +81,6 @@ router.get(
       totalItems: total,
       items: transformItems(TYPE, items),
     });
-  })
-);
-
-// @desc    Search mouse by name
-// @route   GET /api/mouse/search?name=search_term
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const name = req.query.name || "";
-
-    const mouse = await Mouse.find({
-      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-    }).sort({ createdAt: -1 });
-
-    res.json(transformItems(TYPE, mouse));
   })
 );
 

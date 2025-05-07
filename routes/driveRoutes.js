@@ -66,9 +66,12 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const nameQuery = req.query.name;
 
     const total = await Drive.countDocuments();
-    const items = await Drive.find()
+    const items = await Drive.find({
+      name: { $regex: nameQuery, $options: "i" }, // không phân biệt hoa thường
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -80,23 +83,6 @@ router.get(
       totalItems: total,
       items: transformItems("Storage", items),
     });
-  })
-);
-
-// @desc    Search Drives by name
-// @route   GET /api/drives/search?name=keyword
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const nameQuery = req.query.name;
-
-    const drives = await Drive.find({
-      name: { $regex: nameQuery, $options: "i" }, // không phân biệt hoa thường
-    }).sort({ createdAt: -1 });
-
-    res.json(transformItems("drive", drives));
   })
 );
 

@@ -67,9 +67,12 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const name = req.query.name || "";
 
     const total = await Keyboard.countDocuments();
-    const items = await Keyboard.find()
+    const items = await Keyboard.find({
+      name: { $regex: name, $options: "i" },
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -81,23 +84,6 @@ router.get(
       totalItems: total,
       items: transformItems(TYPE, items),
     });
-  })
-);
-
-// @desc    Search Keyboards by name
-// @route   GET /api/keyboards/search?name=ducky
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const name = req.query.name || "";
-
-    const keyboards = await Keyboard.find({
-      name: { $regex: name, $options: "i" },
-    }).sort({ createdAt: -1 });
-
-    res.json(transformItems(TYPE, keyboards));
   })
 );
 

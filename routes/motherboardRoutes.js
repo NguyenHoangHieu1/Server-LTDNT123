@@ -64,9 +64,17 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const name = req.query.name || "";
 
+    // Kiểm tra nếu không có giá trị name
+    if (!name) {
+      res.status(400).json({ message: "Search term is required" });
+      return;
+    }
     const total = await Motherboard.countDocuments();
-    const items = await Motherboard.find()
+    const items = await Motherboard.find({
+      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -78,29 +86,6 @@ router.get(
       totalItems: total,
       items: transformItems(TYPE, items),
     });
-  })
-);
-
-// @desc    Search Motherboards by name
-// @route   GET /api/motherboards/search?name=search_term
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const name = req.query.name || "";
-
-    // Kiểm tra nếu không có giá trị name
-    if (!name) {
-      res.status(400).json({ message: "Search term is required" });
-      return;
-    }
-
-    const motherboards = await Motherboard.find({
-      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-    }).sort({ createdAt: -1 });
-
-    res.json(transformItems(TYPE, motherboards));
   })
 );
 

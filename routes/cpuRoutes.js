@@ -66,9 +66,14 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const keyword = req.query.name
+      ? {
+          name: { $regex: req.query.name, $options: "i" }, // tìm không phân biệt hoa thường
+        }
+      : {};
 
     const total = await CPU.countDocuments();
-    const items = await CPU.find()
+    const items = await CPU.find(keyword)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -80,25 +85,6 @@ router.get(
       totalItems: total,
       items: transformItems("CPU", items),
     });
-  })
-);
-
-// @desc    Search CPUs by name
-// @route   GET /api/cpu/search?name=keyword
-// @access  Private
-router.get(
-  "/search",
-  protect,
-  asyncHandler(async (req, res) => {
-    const keyword = req.query.name
-      ? {
-          name: { $regex: req.query.name, $options: "i" }, // tìm không phân biệt hoa thường
-        }
-      : {};
-
-    const cpus = await CPU.find(keyword).sort({ createdAt: -1 });
-
-    res.json(transformItems("cpu", cpus));
   })
 );
 
