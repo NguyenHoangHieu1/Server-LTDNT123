@@ -13,37 +13,45 @@ const gpuSchema = new mongoose.Schema(
     },
     chipset: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     memory: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     core_clock: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     boost_clock: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     color: {
       type: String,
-      required: true,
+      required: false,
     },
     length: {
+      default: 0,
       type: Number,
-      required: true,
+      required: false,
     },
     purpose: {
       type: String,
-      required: true,
+      default: "",
+      required: false,
     },
     performance_score: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     image: {
+      default: "",
       type: String,
       required: false,
     },

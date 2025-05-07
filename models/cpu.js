@@ -20,19 +20,23 @@ const cpuSchema = new mongoose.Schema(
     },
     core_count: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     core_clock: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     boost_clock: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     tdp: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     graphics: {
       type: mongoose.Schema.Types.Mixed, // Vì có thể là NULL
@@ -41,21 +45,26 @@ const cpuSchema = new mongoose.Schema(
     smt: {
       type: String,
       required: false,
+      default: "",
     },
     socket: {
       type: String,
-      required: true,
+      default: "",
+      required: false,
     },
     purpose: {
       type: String,
-      required: true,
+      default: "",
+      required: false,
     },
     performance_score: {
       type: Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     image: {
       type: String,
+      default: "",
       required: false,
     },
   },
