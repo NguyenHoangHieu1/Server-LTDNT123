@@ -64,17 +64,14 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const name = req.query.name || "";
+    const keyword = req.query.name
+      ? {
+        name: { $regex: req.query.name, $options: "i" }, // tìm không phân biệt hoa thường
+      }
+      : {};
 
-    // Kiểm tra nếu không có giá trị name
-    if (!name) {
-      res.status(400).json({ message: "Search term is required" });
-      return;
-    }
     const total = await Motherboard.countDocuments();
-    const items = await Motherboard.find({
-      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-    })
+    const items = await Motherboard.find(keyword)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

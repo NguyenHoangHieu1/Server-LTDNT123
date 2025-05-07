@@ -66,12 +66,14 @@ router.get(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const nameQuery = req.query.name;
+    const keyword = req.query.name
+      ? {
+        name: { $regex: req.query.name, $options: "i" }, // tìm không phân biệt hoa thường
+      }
+      : {};
 
     const total = await Drive.countDocuments();
-    const items = await Drive.find({
-      name: { $regex: nameQuery, $options: "i" }, // không phân biệt hoa thường
-    })
+    const items = await Drive.find(keyword)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
