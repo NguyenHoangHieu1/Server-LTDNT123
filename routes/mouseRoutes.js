@@ -7,7 +7,7 @@ const { transformItems, transformItem } = require("../utils/transformItems");
 const TYPE = "mouse";
 
 // @desc    Create a new Mouse
-// @route   POST /api/mice
+// @route   POST /api/mouse
 // @access  Private
 router.post(
   "/",
@@ -43,7 +43,7 @@ router.post(
 );
 
 // @desc    Get all Mice
-// @route   GET /api/mice
+// @route   GET /api/mouse
 // @access  Private
 router.get(
   "/",
@@ -55,7 +55,7 @@ router.get(
 );
 
 // @desc    Get Mice with pagination
-// @route   GET /api/mice/paginated?page=1&limit=10
+// @route   GET /api/mouse/paginated?page=1&limit=10
 // @access  Private
 router.get(
   "/paginated",
@@ -81,8 +81,25 @@ router.get(
   })
 );
 
+// @desc    Search mouse by name
+// @route   GET /api/mouse/search?name=search_term
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const name = req.query.name || "";
+
+    const mouse = await Mouse.find({
+      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+    }).sort({ createdAt: -1 });
+
+    res.json(transformItems(TYPE, mouse));
+  })
+);
+
 // @desc    Get Mouse by ID
-// @route   GET /api/mice/:id
+// @route   GET /api/mouse/:id
 // @access  Private
 router.get(
   "/:id",
@@ -99,7 +116,7 @@ router.get(
 );
 
 // @desc    Update a Mouse
-// @route   PUT /api/mice/:id
+// @route   PUT /api/mouse/:id
 // @access  Private
 router.put(
   "/:id",
@@ -136,7 +153,7 @@ router.put(
 );
 
 // @desc    Delete a Mouse
-// @route   DELETE /api/mice/:id
+// @route   DELETE /api/mouse/:id
 // @access  Private
 router.delete(
   "/:id",

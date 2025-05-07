@@ -81,6 +81,29 @@ router.get(
   })
 );
 
+// @desc    Search Motherboards by name
+// @route   GET /api/motherboards/search?name=search_term
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const name = req.query.name || "";
+
+    // Kiểm tra nếu không có giá trị name
+    if (!name) {
+      res.status(400).json({ message: "Search term is required" });
+      return;
+    }
+
+    const motherboards = await Motherboard.find({
+      name: { $regex: name, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+    }).sort({ createdAt: -1 });
+
+    res.json(transformItems(TYPE, motherboards));
+  })
+);
+
 // @desc    Get Motherboard by ID
 // @route   GET /api/motherboards/:id
 // @access  Private

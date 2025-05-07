@@ -84,6 +84,23 @@ router.get(
   })
 );
 
+// @desc    Search Keyboards by name
+// @route   GET /api/keyboards/search?name=ducky
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const name = req.query.name || "";
+
+    const keyboards = await Keyboard.find({
+      name: { $regex: name, $options: "i" },
+    }).sort({ createdAt: -1 });
+
+    res.json(transformItems(TYPE, keyboards));
+  })
+);
+
 // @desc    Get Keyboard by ID
 // @route   GET /api/keyboards/:id
 // @access  Private

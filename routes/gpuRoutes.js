@@ -83,6 +83,23 @@ router.get(
   })
 );
 
+// @desc    Search GPUs by name
+// @route   GET /api/gpus/search?name=keyword
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const nameQuery = req.query.name;
+
+    const gpus = await GPU.find({
+      name: { $regex: nameQuery, $options: "i" }, // tìm không phân biệt hoa thường
+    }).sort({ createdAt: -1 });
+
+    res.json(transformItems("gpu", gpus));
+  })
+);
+
 // @desc    Get GPU by ID
 // @route   GET /api/gpus/:id
 // @access  Private

@@ -83,6 +83,23 @@ router.get(
   })
 );
 
+// @desc    Search Drives by name
+// @route   GET /api/drives/search?name=keyword
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const nameQuery = req.query.name;
+
+    const drives = await Drive.find({
+      name: { $regex: nameQuery, $options: "i" }, // không phân biệt hoa thường
+    }).sort({ createdAt: -1 });
+
+    res.json(transformItems("drive", drives));
+  })
+);
+
 // @desc    Get Drive by ID
 // @route   GET /api/drives/:id
 // @access  Private

@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const { transformItems, transformItem } = require("../utils/transformItems");
 
 // @desc    Create a new CPU
-// @route   POST /api/cpus
+// @route   POST /api/cpu
 // @access  Private
 router.post(
   "/",
@@ -45,7 +45,7 @@ router.post(
 );
 
 // @desc    Get all CPUs
-// @route   GET /api/cpus
+// @route   GET /api/cpu
 // @access  Private
 router.get(
   "/",
@@ -57,7 +57,7 @@ router.get(
   })
 );
 // @desc    Get CPUs with pagination
-// @route   GET /api/cpus/paginated?page=1&limit=10
+// @route   GET /api/cpu/paginated?page=1&limit=10
 // @access  Private
 router.get(
   "/paginated",
@@ -83,8 +83,27 @@ router.get(
   })
 );
 
+// @desc    Search CPUs by name
+// @route   GET /api/cpu/search?name=keyword
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const keyword = req.query.name
+      ? {
+          name: { $regex: req.query.name, $options: "i" }, // tìm không phân biệt hoa thường
+        }
+      : {};
+
+    const cpus = await CPU.find(keyword).sort({ createdAt: -1 });
+
+    res.json(transformItems("cpu", cpus));
+  })
+);
+
 // @desc    Get CPU by ID
-// @route   GET /api/cpus/:id
+// @route   GET /api/cpu/:id
 // @access  Private
 router.get(
   "/:id",
@@ -102,7 +121,7 @@ router.get(
 );
 
 // @desc    Update a CPU
-// @route   PUT /api/cpus/:id
+// @route   PUT /api/cpu/:id
 // @access  Private
 router.put(
   "/:id",
@@ -141,7 +160,7 @@ router.put(
 );
 
 // @desc    Delete a CPU
-// @route   DELETE /api/cpus/:id
+// @route   DELETE /api/cpu/:id
 // @access  Private
 router.delete(
   "/:id",

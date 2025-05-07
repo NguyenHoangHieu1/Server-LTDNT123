@@ -6,7 +6,7 @@ const { protect } = require("../middleware/authMiddleware");
 const { transformItems, transformItem } = require("../utils/transformItems");
 const TYPE = "memory";
 // @desc    Create a new Memory module
-// @route   POST /api/memories
+// @route   POST /api/memory
 // @access  Private
 router.post(
   "/",
@@ -44,7 +44,7 @@ router.post(
 );
 
 // @desc    Get all Memory modules
-// @route   GET /api/memories
+// @route   GET /api/memory
 // @access  Private
 router.get(
   "/",
@@ -56,7 +56,7 @@ router.get(
 );
 
 // @desc    Get Memory modules with pagination
-// @route   GET /api/memories/paginated?page=1&limit=10
+// @route   GET /api/memory/paginated?page=1&limit=10
 // @access  Private
 router.get(
   "/paginated",
@@ -82,8 +82,26 @@ router.get(
   })
 );
 
+// @desc    Get all Memory modules, with optional search
+// @route   GET /api/memory/search?name=abc
+// @access  Private
+router.get(
+  "/search",
+  protect,
+  asyncHandler(async (req, res) => {
+    const keyword = req.query.name
+      ? {
+          name: { $regex: req.query.name, $options: "i" }, // không phân biệt hoa thường
+        }
+      : {};
+
+    const memories = await Memory.find(keyword).sort({ createdAt: -1 });
+    res.json(transformItems(TYPE, memories));
+  })
+);
+
 // @desc    Get Memory by ID
-// @route   GET /api/memories/:id
+// @route   GET /api/memory/:id
 // @access  Private
 router.get(
   "/:id",
@@ -100,7 +118,7 @@ router.get(
 );
 
 // @desc    Update a Memory module
-// @route   PUT /api/memories/:id
+// @route   PUT /api/memory/:id
 // @access  Private
 router.put(
   "/:id",
@@ -140,7 +158,7 @@ router.put(
 );
 
 // @desc    Delete a Memory module
-// @route   DELETE /api/memories/:id
+// @route   DELETE /api/memory/:id
 // @access  Private
 router.delete(
   "/:id",
