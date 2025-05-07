@@ -35,9 +35,16 @@ const gpuSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    purpose: {
+      type: String,
+      required: true,
+    },
+    performance_score: {
+      type: Number,
+      required: true,
+    },
   },
-  {collection:"video-card"}
-  
+  { collection: "video-card" }
 );
 
 const GPU = mongoose.model("GPU", gpuSchema);
