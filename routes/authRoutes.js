@@ -128,7 +128,7 @@ router.put(
   "/profile",
   protect,
   asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.body._id);
 
     if (user) {
       // Update name and email if provided
@@ -173,7 +173,7 @@ router.put(
       throw new Error("Please provide current and new password");
     }
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.body._id);
 
     if (user && (await user.matchPassword(currentPassword))) {
       user.password = newPassword;

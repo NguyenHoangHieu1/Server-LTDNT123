@@ -85,6 +85,23 @@ router.get(
   })
 );
 
+// @desc    Get build by user
+// @route   GET /api/builds/:id
+// @access  Private
+router.get(
+  "/user/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    const build = await Build.find({ userId: req.params.id });
+    if (build) {
+      res.json(build);
+    } else {
+      res.status(404);
+      throw new Error("Build not found");
+    }
+  })
+);
+
 // @desc    Get build by ID
 // @route   GET /api/builds/:id
 // @access  Private
